@@ -5,7 +5,8 @@ ENTITY contrast_computer IS
 	PORT (
 		start, clk, rst: in std_logic;
 		compute_done : out std_logic;
-		total_sum, cache_address, cache_data : out std_logic_vector (15 downto 0)
+		cache_data : in std_logic_vector (15 downto 0);
+		total_sum, cache_address : out std_logic_vector (15 downto 0)
 	);
 END contrast_computer;
 
@@ -21,12 +22,19 @@ ARCHITECTURE a_contrast_computer OF contrast_computer IS
 		output	:	out std_logic_vector (15 downto 0)
 	);
 	END COMPONENT;
+	COMPONENT index_component IS
+	PORT(   clk,rst,wr_en : IN std_logic;
+		index_reg_out_out : OUT std_logic_vector(15 DOWNTO 0));
+	END COMPONENT;
 
 	SIGNAL src_out, r_out, acc_out, total_sum_out : std_logic_vector (15 DOWNTO 0);
 	SIGNAL wr_enable_src, wr_enable_r, totalsum_enable_r : std_logic;
+	SIGNAL index_rst, index_wr_en : std_logic;
+	SIGNAL index_reg_out : std_logic_vector(15 DOWNTO 0);
         BEGIN
         src: reg port map(clk,rst,wr_enable_src, cache_data, src_out);
 	r: reg port map(clk, rst, wr_enable_r, cache_data, r_out);
-	total_sum: reg port map(clk, rst, totalsum_enable_r, acc_out, total_sum_out);
+	total_sum_reg: reg port map(clk, rst, totalsum_enable_r, acc_out, total_sum_out);
 	acc: accumulator port map(src_out, r_out, total_sum_out, acc_out);
+	indx : index_component port map(clk, index_rst, index_wr_en, index_reg_out);
 END a_contrast_computer;
