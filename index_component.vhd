@@ -64,12 +64,15 @@ Threevec <= "0000000000000011";
 Zerovec <= "0000000000000000";
 Eighteenvec <= "0000000000010010";
 index_reg_out_out <= index_reg_out;
+index_reg_rst <= '0';
+adder_a <= index_reg_out;
+adder_cin <= '0';
 
 adder_mux_sel <= "00" when rst = '1' or finish_indexing = '1' or wr_en = '0'
 		else "10" when index_reg_out = "0000000000100010" or index_reg_out = "0000000000110100" or index_reg_out = "0000000001000110" or index_reg_out = "0000000001011000" or index_reg_out = "0000000001101010" or index_reg_out = "0000000001111100" or index_reg_out = "0000000010001110" or index_reg_out = "0000000010100000" or index_reg_out = "0000000010110010" or index_reg_out = "0000000011000100" or index_reg_out = "0000000011010110" or index_reg_out = "0000000011101000" or index_reg_out = "0000000011111010" or index_reg_out = "0000000100001100" or index_reg_out = "0000000100011110" or index_reg_out = "0000000100110000"
 		else "01";
 		
-finish_indexing <= '1' when index_reg_out = "0000000100110000";
+finish_indexing <= '1' when index_reg_out = "0000000100110000"; -- finish indexing in the last row
 
 index_reg_en <= '1' when wr_en = '1' or rst = '1'; -- enable the register when rst of the system or wr_en
 		
