@@ -1,7 +1,7 @@
 LIBRARY IEEE;
 USE IEEE.std_logic_1164.all;
 
-ENTITY FSM IS
+ENTITY FSM_compute IS
 	PORT (  
 		clk, rst, en, start, finish_indexing : IN STD_LOGIC;
 		src_wr_en, r_wr_en, totalsum_wr_en : OUT STD_LOGIC;
@@ -10,9 +10,9 @@ ENTITY FSM IS
 		compute_done : OUT STD_LOGIC;
 		mux_adder    : OUT STD_LOGIC_VECTOR (1 DOWNTO 0)
 	     );
-END FSM;
+END FSM_compute;
 
-ARCHITECTURE FSM_A OF FSM IS
+ARCHITECTURE FSM_compute_A OF FSM_compute IS
 
 type state_type  is (do_nothing, init, inc, load_src, load_r1, compute1, load_r2, compute2, load_r3, compute3, load_r4, compute4, compute_finish); 
 signal state : state_type;
@@ -188,5 +188,5 @@ BEGIN
 	END PROCESS;
 
 
-End FSM_A;
+End FSM_compute_A;
 
