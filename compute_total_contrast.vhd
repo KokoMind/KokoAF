@@ -27,7 +27,7 @@ ARCHITECTURE a_contrast_computer OF contrast_computer IS
 		finish_indexing : OUT std_logic;
 		index_reg_out_out : OUT std_logic_vector(15 DOWNTO 0));
 	END COMPONENT;
-	COMPONENT FSM IS
+	COMPONENT fsm_compute IS
 	PORT (  
 		clk, rst, start, finish_indexing : IN STD_LOGIC;
 		src_wr_en, r_wr_en, totalsum_wr_en : OUT STD_LOGIC;
@@ -58,7 +58,7 @@ ARCHITECTURE a_contrast_computer OF contrast_computer IS
 	SIGNAL mux_adder : std_logic_vector (1 downto 0);
 	SIGNAL shift_amt : std_logic_vector(15 downto 0);
 	SIGNAL neg_1, pos_1, neg_18, pos_18 : std_logic_vector (15 downto 0);
-	SIGNAL finish_indexing;
+	SIGNAL finish_indexing : std_logic;
         BEGIN
 	total_sum <= total_sum_out;
 	neg_1 <= "1111111111111111";
