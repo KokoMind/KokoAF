@@ -2,63 +2,123 @@ LIBRARY IEEE;
 USE IEEE.std_logic_1164.all;
 
 ENTITY FSM IS
-	PORT (IR, F : IN  STD_LOGIC_vector(15 downto 0);
-		CLK,CLK2,RST : IN STD_LOGIC;
-		ALUout : OUT STD_LOGIC_VECTOR(4 DOWNTO 0);
-		Incrementer, R0out, R0in, R1out, R1in, PCout, PCin, SPout, SPin : OUT STD_LOGIC;
-		MARin, MDRout, MDRin, IRin, IRout, RD, WRT, INC, DEC, ADD, Zin, Zout, Yin, Yout, TEMPin, TEMPout  : OUT STD_LOGIC);
+	PORT (  
+		clk, rst, en, start, finish_indexing : IN STD_LOGIC;
+		src_wr_en, r_wr_en, totalsum_wr_en : OUT STD_LOGIC;
+		index_rst, index_wr_en : OUT STD_LOGIC;
+		totalsum_rst : OUT STD_LOGIC;
+		compute_done : OUT STD_LOGIC;
+	     );
 END FSM;
-
 
 ARCHITECTURE FSM_A OF FSM IS
 
-type state_type  is (T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, Trst); 
+type state_type  is (do_nothing, init, inc, load_src, load_r1, compute1, load_r2, compute2, load_r3, compute3, load_r4, compute4, compute_finish); 
 signal state : state_type;
 signal next_state : state_type;
 BEGIN
 	PROCESS (state)
 	BEGIN
-		
 			CASE state is 
-				when Trst =>
-					next_state <= T0;
-				Incrementer <= '0';
-				R0out <= '0';
-				R1out  <= '0';
-				PCout  <= '0';
-				SPout  <= '0';
-			 	SPin  <= '0';
-				PCin  <= '0';
-				 R0in <= '0';
-				R1in  <= '0';
-				MARin <= '0';
-				MDRout <= '0';
-				MDRin <= '0';
-				IRin <= '0';
-				IRout <= '0';
-				RD <= '0';
-				WRT <= '0';
-				INC <= '0';
-				DEC <= '0';
-				ADD <= '0';
-				TEMPin <= '0';
-				TEMPout <= '0';
-				Zin <= '0';
-				Zout <= '0';
-				Yin <= '0';
-				Yout <= '0';
-				ALUout <= "00000";
+				when do_nothing =>
+					if  start = '0' or en = '0' then
+						next_state <= do_nothing;
+						src_wr_en <= '0';
+						r_wr_en <= '0';
+						totalsum_wr_en <= '0';
+						index_wr_en <= '0';
+						index_rst <= '0';
+						totalsum_rst <= '0';
+						compute_done <= '0';
+					else
+					 	next_state <= init;
+						src_wr_en <= '0';
+						r_wr_en <= '0';
+						totalsum_wr_en <= '0';
+						index_wr_en <= '0';
+						index_rst <= '0';
+						totalsum_rst <= '0';
+						compute_done <= '0';
+					end if;
+				when init =>
+					next_state <= inc;
+					src_wr_en <= '0';
+					r_wr_en <= '0';
+					totalsum_wr_en <= '0';
+					index_wr_en <= '1';
+					index_rst <= '1';
+					totalsum_rst <= '1';
+					compute_done <= '0';
+				when inc =>
+					next_state <= load_src;
+					src_wr_en <= '0';
+					r_wr_en <= '0';
+					totalsum_wr_en <= '0';
+					index_wr_en <= '1';
+					index_rst <= '0';
+					totalsum_rst <= '0';
+					compute_done <= '0';
+				when load_src => 
+					if  finish_indexing = '1' then
+						next_state <= compute_finish;
+						src_wr_en <= '0';
+						r_wr_en <= '0';
+						totalsum_wr_en <= '0';
+						index_wr_en <= '0';
+						index_rst <= '0';
+						totalsum_rst <= '0';
+						compute_done <= '0';
+					else
+					 	next_state <= load_r1;
+						src_wr_en <= '1';
+						r_wr_en <= '0';
+						totalsum_wr_en <= '0';
+						index_wr_en <= '0';
+						index_rst <= '0';
+						totalsum_rst <= '0';
+						compute_done <= '0';
+					end if;
+				when load_r1 => 
+					next_state <= compute1;
+					-- out signals
+				when compute1 => 
+					next_state <= load_r2;
+					-- out signals
+				when load_r2 => 
+					next_state <= compute2;
+					-- out signals
+				when compute2 => 
+					next_state <= load_r3;
+					-- out signals
+				when load_r3 => 
+					next_state <= compute3;
+					-- out signals
+				when compute3 => 
+					next_state <= load_r4;
+					-- out signals
+				when load_r4 => 
+					next_state <= compute4;
+					-- out signals
+				when compute4 => 
+					next_state <= inc;
+					-- out signals
+				when compute_finish => 
+					next_state <= do_nothing;
+					src_wr_en <= '0';
+					r_wr_en <= '0';
+					totalsum_wr_en <= '0';
+					index_wr_en <= '0';
+					index_rst <= '0';
+					totalsum_rst <= '0';
+					compute_done <= '1';
 			END CASE;
-
-
 	END PROCESS;
 
-	PROCESS (CLK, RST)
+	PROCESS (clk, rst)
 		BEGIN
-			IF RST = '1' THEN
-				state  <= Trst;
-
-			ELSIF rising_edge(CLK) THEN 
+			IF rst = '1' THEN
+				state  <= compute_rst;
+			ELSIF rising_edge(clk) THEN 
 				state  <= next_state;
 			END IF;
 	END PROCESS;
