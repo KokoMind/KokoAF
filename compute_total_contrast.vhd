@@ -24,11 +24,12 @@ ARCHITECTURE a_contrast_computer OF contrast_computer IS
 	END COMPONENT;
 	COMPONENT index_component IS
 	PORT(   clk,rst,wr_en : IN std_logic;
+		finish_indexing : OUT std_logic;
 		index_reg_out_out : OUT std_logic_vector(15 DOWNTO 0));
 	END COMPONENT;
 	COMPONENT FSM IS
 	PORT (  
-		clk, rst, en, start, finish_indexing : IN STD_LOGIC;
+		clk, rst, start, finish_indexing : IN STD_LOGIC;
 		src_wr_en, r_wr_en, totalsum_wr_en : OUT STD_LOGIC;
 		index_rst, index_wr_en : OUT STD_LOGIC;
 		totalsum_rst : OUT STD_LOGIC;
@@ -57,6 +58,7 @@ ARCHITECTURE a_contrast_computer OF contrast_computer IS
 	SIGNAL mux_adder : std_logic_vector (1 downto 0);
 	SIGNAL shift_amt : std_logic_vector(15 downto 0);
 	SIGNAL neg_1, pos_1, neg_18, pos_18 : std_logic_vector (15 downto 0);
+	SIGNAL finish_indexing;
         BEGIN
 	total_sum <= total_sum_out;
 	neg_1 <= "1111111111111111";
@@ -67,7 +69,8 @@ ARCHITECTURE a_contrast_computer OF contrast_computer IS
 	r: reg port map(clk, rst, wr_enable_r, cache_data, r_out);
 	total_sum_reg: reg port map(clk, total_sum_rst, totalsum_enable_r, acc_out, total_sum_out);
 	acc: accumulator port map(src_out, r_out, total_sum_out, acc_out);
-	indx : index_component port map(clk, index_rst, index_wr_en, index_reg_out);
+	indx : index_component port map(clk, index_rst, index_wr_en, finish_indexing, index_reg_out);
 	shift_chooser : mux_4x1_16 port map(mux_adder, neg_1, neg_18, pos_1, pos_18, shift_amt);
 	location_adder: generic_nadder generic map (16) port map (src_out, shift_amt, '0', cache_address, dummy_cout);
+	fsm_computer : fsm_compute port map(clk, rst, start, finish_indexing, wr_enable_src, wr_enable_r, totalsum_enable_r, index_rst, index_wr_en, total_sum_rst, compute_done, mux_adder);
 END a_contrast_computer;

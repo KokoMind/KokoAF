@@ -3,7 +3,7 @@ USE IEEE.std_logic_1164.all;
 
 ENTITY FSM IS
 	PORT (  
-		clk, rst, en, start, finish_indexing : IN STD_LOGIC;
+		clk, rst, start, finish_indexing : IN STD_LOGIC;
 		src_wr_en, r_wr_en, totalsum_wr_en : OUT STD_LOGIC;
 		index_rst, index_wr_en : OUT STD_LOGIC;
 		totalsum_rst : OUT STD_LOGIC;
@@ -22,7 +22,7 @@ BEGIN
 	BEGIN
 			CASE state is 
 				when do_nothing =>
-					if  start = '0' or en = '0' then
+					if  start = '0' then
 						next_state <= do_nothing;
 						src_wr_en <= '0';
 						r_wr_en <= '0';
