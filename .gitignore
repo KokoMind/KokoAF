@@ -7,3 +7,4 @@ work/*
 transcript
 validator/block
 validator/padded
+!test_cache.mem
