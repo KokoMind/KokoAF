@@ -27,10 +27,9 @@ ARCHITECTURE a_contrast_computer OF contrast_computer IS
 		index_reg_out_out : OUT std_logic_vector(15 DOWNTO 0));
 	END COMPONENT;
 
-	SIGNAL src_out, r_out, acc_out, total_sum_out : std_logic_vector (15 DOWNTO 0);
+	SIGNAL src_out, r_out, acc_out, total_sum_out, index_reg_out : std_logic_vector (15 DOWNTO 0);
 	SIGNAL wr_enable_src, wr_enable_r, totalsum_enable_r : std_logic;
 	SIGNAL index_rst, index_wr_en : std_logic;
-	SIGNAL index_reg_out : std_logic_vector(15 DOWNTO 0);
 
         BEGIN
 
