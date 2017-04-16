@@ -6,9 +6,9 @@ ENTITY FSM IS
 		clk, start, rst, load_ack, compute_done, move_done, flag_in, worse : in std_logic;
 		outer_address : in std_logic_vector (15 downto 0);
 		load_en, compute_en, move, flag_out, done : out std_logic;
-		total_sum_bak_out : out std_logic_vector (15 downto 0);
+		total_sum_bak_out : out std_logic_vector (31 downto 0);
 		address : out std_logic_vector (15 downto 0);
-		total_sum_bak_in, total_sum_new : in std_logic_vector (15 downto 0);
+		total_sum_bak_in, total_sum_new : in std_logic_vector (31 downto 0);
 		in_direction : in std_logic;
 		out_direction : out std_logic
 	     );
@@ -19,9 +19,7 @@ ARCHITECTURE FSM_A OF FSM IS
 type state_type  is (do_nothing, load_focus_matrix, set_direction, move_lens, compute_total_contrast, check, finish); 
 signal state : state_type;
 signal next_state : state_type;
-signal MAX : std_logic_vector (15 downto 0);
 BEGIN
-	MAX <= (OTHERS => '1');
 	PROCESS (state, start, load_ack, move_done, compute_done, worse, flag_in)
 	BEGIN
 			CASE state is 
@@ -32,7 +30,7 @@ BEGIN
 						flag_out <= '0';
 						done <= '0';
 						out_direction <= '0';
-						total_sum_bak_out <= "1111111111111111";
+						total_sum_bak_out <= "11111111111111111111111111111111";
 						if  start = '0' then
 							next_state <= do_nothing;
 						else 
@@ -91,7 +89,7 @@ BEGIN
 						done <= '0';
 						out_direction <= in_direction;
 						total_sum_bak_out <= total_sum_new;
-						if total_sum_bak_in = MAX then
+						if total_sum_bak_in = "11111111111111111111111111111111" then
 							flag_out <= '0';
 							next_state <= set_direction;
 						elsif flag_in = '0' and worse = '1' then
@@ -120,7 +118,7 @@ BEGIN
 						flag_out <= '0';
 						done <= '0';
 						out_direction <= '0';
-						total_sum_bak_out <= "1111111111111111";
+						total_sum_bak_out <= "11111111111111111111111111111111";
 						next_state <= do_nothing;
 						
 			END CASE;

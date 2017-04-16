@@ -3,8 +3,9 @@ USE IEEE.std_logic_1164.all;
 
 ENTITY accumulator IS
 	PORT (
-		src,r,total_sum : in std_logic_vector (15 downto 0);
-		output	:	out std_logic_vector (15 downto 0)
+		src,r : in std_logic_vector (15 downto 0);
+		total_sum : in std_logic_vector (31 downto 0);
+		output	:	out std_logic_vector (31 downto 0)
 	);
 END accumulator;
 
@@ -17,6 +18,7 @@ ARCHITECTURE a_accumulator OF accumulator IS
              cout : OUT std_logic);
      END COMPONENT;
      SIGNAL sub_out, notr, not_sub_out, zero_vec, absolute_out : std_logic_vector (15 downto 0);
+     SIGNAL padded_out : std_logic_vector (31 downto 0);
      SIGNAL sub_cout, sign, do_abs, absolute_cout, dummy_cout : std_logic;
      BEGIN
 	notr <= not r;
@@ -28,5 +30,6 @@ ARCHITECTURE a_accumulator OF accumulator IS
 	do_abs <= '0' when sign = '0'
 		  else '1';
 	absolute: generic_nadder generic map (16) port map (not_sub_out,zero_vec,do_abs,absolute_out,absolute_cout);
-	accumulate: generic_nadder generic map (16) port map (absolute_out,total_sum,'0',output,dummy_cout);
+	padded_out <= "0000000000000000" & absolute_out;
+	accumulate: generic_nadder generic map (32) port map (padded_out,total_sum,'0',output,dummy_cout);
 END a_accumulator;

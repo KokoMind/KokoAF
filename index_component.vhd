@@ -80,7 +80,7 @@ finish_indexing <= finish_indexing_out;
 
 index_reg_en <= '1' when wr_en = '1' or rst = '1'; -- enable the register when rst of the system or wr_en
 		
-index_reg : reg port map (clk, index_reg_rst, index_reg_en, index_reg_in, index_reg_out);
+index_reg : reg port map (clk, rst, index_reg_en, index_reg_in, index_reg_out);
 index_add : generic_nadder generic map (16) port map (adder_a, adder_b, adder_cin, adder_out, adder_cout);
 index_mux_add : mux_4x1_16 port map (adder_mux_sel, Zerovec, Onevec, Threevec, Zerovec, adder_b);
 index_mux_in : mux_2x1_16 port map (rst, adder_out, Eighteenvec, index_reg_in); --Signal 18 if rst of system
