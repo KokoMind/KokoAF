@@ -31,7 +31,7 @@ BEGIN
 						move <= '0';
 						flag_out <= '0';
 						done <= '0';
-						total_sum_bak_out <= total_sum_bak_in;
+						total_sum_bak_out <= MAX;
 						if  start = '0' then
 							next_state <= do_nothing;
 						else 
