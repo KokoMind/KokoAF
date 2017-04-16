@@ -18,7 +18,7 @@ type state_type  is (do_nothing, init, inc, load_src, load_r1, compute1, load_r2
 signal state : state_type;
 signal next_state : state_type;
 BEGIN
-	PROCESS (state)
+	PROCESS (state, start, finish_indexing)
 	BEGIN
 			CASE state is 
 				when do_nothing =>

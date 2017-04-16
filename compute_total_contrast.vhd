@@ -71,6 +71,6 @@ ARCHITECTURE a_contrast_computer OF contrast_computer IS
 	acc: accumulator port map(src_out, r_out, total_sum_out, acc_out);
 	indx : index_component port map(clk, index_rst, index_wr_en, finish_indexing, index_reg_out);
 	shift_chooser : mux_4x1_16 port map(mux_adder, neg_1, neg_18, pos_1, pos_18, shift_amt);
-	location_adder: generic_nadder generic map (16) port map (src_out, shift_amt, '0', cache_address, dummy_cout);
+	location_adder: generic_nadder generic map (16) port map (index_reg_out, shift_amt, '0', cache_address, dummy_cout);
 	fsm_computer : fsm_compute port map(clk, rst, start, finish_indexing, wr_enable_src, wr_enable_r, totalsum_enable_r, index_rst, index_wr_en, total_sum_rst, compute_done, mux_adder);
 END a_contrast_computer;

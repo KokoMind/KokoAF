@@ -22,7 +22,7 @@ signal next_state : state_type;
 signal MAX : std_logic_vector (15 downto 0);
 BEGIN
 	MAX <= (OTHERS => '1');
-	PROCESS (state)
+	PROCESS (state, start, load_ack, move_done, compute_done, worse, flag_in)
 	BEGIN
 			CASE state is 
 				when do_nothing =>
@@ -121,7 +121,7 @@ BEGIN
 						done <= '0';
 						out_direction <= '0';
 						total_sum_bak_out <= "1111111111111111";
-						next_state <= load_focus_matrix;
+						next_state <= do_nothing;
 						
 			END CASE;
 	END PROCESS;
