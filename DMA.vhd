@@ -1,7 +1,7 @@
 
 LIBRARY IEEE;
 USE IEEE.std_logic_1164.all;
--- n-bit adder
+
 ENTITY dma IS
 PORT(
 	enable,clk,clk_mem : IN std_logic; 
