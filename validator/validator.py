@@ -2,9 +2,9 @@ import numpy as np
 
 image = np.random.randint(0, 255, size=(256, 256))
 
-with open("image", 'w') as f:
+with open("../test_nvm.mem", 'w') as f:
     f.write("""// memory data file (do not edit the following line - required for mem load use)
-// instance=/koko_micro/instruction_mem_port/instruction_mem
+// instance=/dma/ram/ram
 // format=mti addressradix=d dataradix=b version=1.0 wordsperline=1\n""")
     for i in range(256):
         for j in range(256):
@@ -12,7 +12,7 @@ with open("image", 'w') as f:
             f.write(str(image[i, j]))
             f.write('\n')
 
-position = int(input("inter el index ya 3rs\n"))
+position = int(input("inter el index ya mo7trm\n"))
 
 row = int(position / 256)
 column = position - row * 256

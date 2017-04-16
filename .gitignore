@@ -5,3 +5,5 @@ work/*
 *.mti
 *.mem
 transcript
+validator/block
+validator/padded
