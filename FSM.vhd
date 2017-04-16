@@ -34,7 +34,7 @@ BEGIN
 						out_direction <= '0';
 						total_sum_bak_out <= "1111111111111111";
 						if  start = '0' then
-							next_state <= load_focus_matrix;
+							next_state <= do_nothing;
 						else 
 							next_state <= load_focus_matrix;
 						end if;
