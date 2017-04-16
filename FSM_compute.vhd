@@ -29,7 +29,7 @@ BEGIN
 						totalsum_wr_en <= '0';
 						index_wr_en <= '0';
 						index_rst <= '0';
-						totalsum_rst <= '0';
+						totalsum_rst <= '1';
 						compute_done <= '0';
 						mux_adder <= "00";
 					else
@@ -39,7 +39,7 @@ BEGIN
 						totalsum_wr_en <= '0';
 						index_wr_en <= '0';
 						index_rst <= '0';
-						totalsum_rst <= '0';
+						totalsum_rst <= '1';
 						compute_done <= '0';
 						mux_adder <= "00";
 					end if;
@@ -174,6 +174,16 @@ BEGIN
 					index_rst <= '0';
 					totalsum_rst <= '0';
 					compute_done <= '1';
+					mux_adder <= "00";
+				when others => 
+					next_state <= do_nothing;
+					src_wr_en <= '0';
+					r_wr_en <= '0';
+					totalsum_wr_en <= '0';
+					index_wr_en <= '0';
+					index_rst <= '0';
+					totalsum_rst <= '1';
+					compute_done <= '0';
 					mux_adder <= "00";
 			END CASE;
 	END PROCESS;

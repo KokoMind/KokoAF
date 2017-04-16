@@ -45,7 +45,7 @@ Component data_ram IS
 	PORT(	clk : IN std_logic;
 		en  : IN std_logic;
 		wr  : IN std_logic;
-		address : IN  std_logic_vector(15 DOWNTO 0);
+		address : IN  std_logic_vector(8 DOWNTO 0);
 		datain  : IN  std_logic_vector(15 DOWNTO 0);
 		dataout : OUT std_logic_vector(15 DOWNTO 0));
 END  Component;
@@ -81,7 +81,7 @@ cur_address :   preset_reg  port map (clk,rst,enable,in_addr,new_addr,cur_addr);
 count_inner :   preset_reg  port map (clk,rst,enable,zerovec,new_cnt_in,cnt);
 count_outer :   preset_reg  port map (clk,rst,enable,zerovec,new_cnt2,cnt2);
 ram : data_ram256 port map(clk_mem,'1', enable,cur_addr, zerovec,ram_out1 );
-cache: data_ram port map(clk_mem,'1',enable,cache_address_in, ram_out1 ,cache_out );
+cache: data_ram port map(clk_mem,'1',enable,cache_address_in(8 downto 0), ram_out1 ,cache_out );
 
 cache_address_in <= cache_addr when enable = '1'
 		else cache_address_read;

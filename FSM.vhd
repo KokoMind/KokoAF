@@ -31,9 +31,10 @@ BEGIN
 						move <= '0';
 						flag_out <= '0';
 						done <= '0';
-						total_sum_bak_out <= MAX;
+						out_direction <= '0';
+						total_sum_bak_out <= "1111111111111111";
 						if  start = '0' then
-							next_state <= do_nothing;
+							next_state <= load_focus_matrix;
 						else 
 							next_state <= load_focus_matrix;
 						end if;
@@ -43,6 +44,7 @@ BEGIN
 						move <= '0';
 						flag_out <= flag_in;
 						done <= '0';
+						out_direction <= in_direction;
 						total_sum_bak_out <= total_sum_bak_in;
 						if load_ack = '1' then 
 							next_state <= compute_total_contrast;
@@ -63,6 +65,7 @@ BEGIN
 						move <= '1';
 						flag_out <= flag_in;
 						done <= '0';
+						out_direction <= in_direction;
 						total_sum_bak_out <= total_sum_bak_in;
 						if move_done = '1' then
 							next_state <= load_focus_matrix;
@@ -75,6 +78,7 @@ BEGIN
 						move <= '0';
 						flag_out <= flag_in;
 						done <= '0';
+						out_direction <= in_direction;
 						total_sum_bak_out <= total_sum_bak_in;
 						if compute_done = '1' then 
 							next_state <= check;
@@ -85,6 +89,7 @@ BEGIN
 						compute_en <= '0';
 						move <= '0';
 						done <= '0';
+						out_direction <= in_direction;
 						total_sum_bak_out <= total_sum_new;
 						if total_sum_bak_in = MAX then
 							flag_out <= '0';
@@ -104,9 +109,19 @@ BEGIN
 						compute_en <= '0';
 						move <= '0';
 						flag_out <= flag_in;
+						out_direction <= in_direction;
 						done <= '1';
 						total_sum_bak_out <= total_sum_bak_in;
-						next_state <= finish;			
+						next_state <= finish;		
+				when others =>	
+						load_en <= '0';
+						compute_en <= '0';
+						move <= '0';
+						flag_out <= '0';
+						done <= '0';
+						out_direction <= '0';
+						total_sum_bak_out <= "1111111111111111";
+						next_state <= load_focus_matrix;
 						
 			END CASE;
 	END PROCESS;
