@@ -33,7 +33,11 @@ ARCHITECTURE a_system OF system IS
 		compute_done : out std_logic;
 		cache_data : in std_logic_vector (15 downto 0);
 		cache_address : out std_logic_vector (15 downto 0);
-		total_sum : out std_logic_vector(31 downto 0)
+		total_sum : out std_logic_vector(31 downto 0);
+		state_no : out std_logic_vector(3 downto 0);
+		index_reg_out_out : out std_logic_vector(15 downto 0);
+		src_out_out, r_out_out : out std_logic_vector (15 DOWNTO 0);
+		acc_out_out : out std_logic_vector(31 downto 0)
 	);
 	END COMPONENT;
 
@@ -72,6 +76,10 @@ ARCHITECTURE a_system OF system IS
 	-- SIGNALS
 	signal fsm_address_out, cache_data, cache_address : std_logic_vector (15 downto 0);
 	signal total_sum_bak_in, total_sum_bak_out, total_sum_new : std_logic_vector (31 downto 0);	
+	SIGNAL state_no : std_logic_vector(3 downto 0);
+	SIGNAL index_reg_out : std_logic_vector(15 downto 0);
+	SIGNAL src_out, r_out : std_logic_vector (15 DOWNTO 0);
+	SIGNAL acc_out : std_logic_vector(31 downto 0);
 	signal out_direction, in_direction, worse, load_en, load_ack, compute_en, compute_done, flag_out, flag_in : std_logic;
         BEGIN
 	
@@ -80,7 +88,7 @@ ARCHITECTURE a_system OF system IS
 	total_sum_bak1 : reg_32 port map(clk, rst, '1', total_sum_bak_out, total_sum_bak_in);
 	comparator1 : comparator port map(total_sum_bak_in, total_sum_new, worse);
 	dma1 : dma port map(load_en, clk, clk, fsm_address_out, load_ack, cache_data, cache_address);
-	contraster1 : contrast_computer port map(compute_en, clk, rst, compute_done, cache_data, cache_address, total_sum_new);
+	contraster1 : contrast_computer port map(compute_en, clk, rst, compute_done, cache_data, cache_address, total_sum_new, state_no, index_reg_out, src_out, r_out, acc_out);
 	
 	fsm1 : FSM port map(clk, start, rst, load_ack, compute_done, move_done, flag_in, worse, address_focus_matrix, load_en, compute_en, move, flag_out, done, total_sum_bak_out, fsm_address_out, total_sum_bak_in, total_sum_new, in_direction, out_direction);
 

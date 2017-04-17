@@ -3,7 +3,7 @@ LIBRARY IEEE;
 USE IEEE.std_logic_1164.all;
 
 ENTITY index_component IS
-	PORT(   clk,rst,wr_en : IN std_logic;
+	PORT(   clk,rst,index_reg_rst,wr_en : IN std_logic;
 		finish_indexing : OUT std_logic;
 		index_reg_out_out : OUT std_logic_vector(15 DOWNTO 0));
 END index_component;
@@ -38,7 +38,6 @@ Component mux_2x1_16 IS
 END Component;
 
 SIGNAL index_reg_in : std_logic_vector(15 DOWNTO 0);
-SIGNAL index_reg_rst : std_logic;
 SIGNAL index_reg_en : std_logic;
 SIGNAL index_reg_out : std_logic_vector(15 DOWNTO 0);
 
@@ -65,7 +64,6 @@ Threevec <= "0000000000000011";
 Zerovec <= "0000000000000000";
 Eighteenvec <= "0000000000010010";
 index_reg_out_out <= index_reg_out;
-index_reg_rst <= '0';
 adder_a <= index_reg_out;
 adder_cin <= '0';
 
@@ -78,11 +76,11 @@ finish_indexing_out <= '1' when index_reg_out = "0000000100110000"
 		-- finish indexing in the last row
 finish_indexing <= finish_indexing_out;
 
-index_reg_en <= '1' when wr_en = '1' or rst = '1'; -- enable the register when rst of the system or wr_en
+index_reg_en <= wr_en; -- enable the register when rst of the system or wr_en
 		
 index_reg : reg port map (clk, rst, index_reg_en, index_reg_in, index_reg_out);
 index_add : generic_nadder generic map (16) port map (adder_a, adder_b, adder_cin, adder_out, adder_cout);
 index_mux_add : mux_4x1_16 port map (adder_mux_sel, Zerovec, Onevec, Threevec, Zerovec, adder_b);
-index_mux_in : mux_2x1_16 port map (rst, adder_out, Eighteenvec, index_reg_in); --Signal 18 if rst of system
+index_mux_in : mux_2x1_16 port map (index_reg_rst, adder_out, Eighteenvec, index_reg_in); --Signal 18 if rst of system
 
 END a_index_component;
