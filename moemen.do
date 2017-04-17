@@ -13,4 +13,4 @@ run
 force -freeze sim:/system/start 1 0
 run
 run 25600ps
-#run 281400ps
+run 281400ps

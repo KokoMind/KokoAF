@@ -71,7 +71,7 @@ adder_mux_sel <= "00" when rst = '1' or finish_indexing_out = '1' or wr_en = '0'
 		else "10" when index_reg_out = "0000000000100010" or index_reg_out = "0000000000110100" or index_reg_out = "0000000001000110" or index_reg_out = "0000000001011000" or index_reg_out = "0000000001101010" or index_reg_out = "0000000001111100" or index_reg_out = "0000000010001110" or index_reg_out = "0000000010100000" or index_reg_out = "0000000010110010" or index_reg_out = "0000000011000100" or index_reg_out = "0000000011010110" or index_reg_out = "0000000011101000" or index_reg_out = "0000000011111010" or index_reg_out = "0000000100001100" or index_reg_out = "0000000100011110" or index_reg_out = "0000000100110000"
 		else "01";
 		
-finish_indexing_out <= '1' when index_reg_out = "0000000100110000"
+finish_indexing_out <= '1' when index_reg_out = "0000000100110011"
 		else '0';
 		-- finish indexing in the last row
 finish_indexing <= finish_indexing_out;
