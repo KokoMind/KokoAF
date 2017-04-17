@@ -3,7 +3,6 @@ work/*
 *.mpf
 *.wlf
 *.mti
-*.mem
 transcript
 validator/block
 validator/padded
