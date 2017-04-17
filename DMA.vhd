@@ -106,6 +106,6 @@ adder_inner : generic_nadder generic map (16) port map (cnt,vec1,'0',new_cnt,dnt
 adder_outer : generic_nadder generic map (16) port map (cnt2,add_value3,'0',new_cnt2,dntcare);
 
 
-ack <= '1' when cnt2=vec16 
+ack <= '1' when cnt = vec15 and cnt2 = vec15
 	   else '0' ;
 end a_dma;
