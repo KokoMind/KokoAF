@@ -22,7 +22,7 @@ ARCHITECTURE a_system OF system IS
 		enable,clk,clk_mem : IN std_logic; 
 		in_addr : IN std_logic_vector(15  DOWNTO 0); 
 		ack : OUT std_logic;
-		cache_out : OUT std_logic_vector(15  DOWNTO 0);
+		cache_out : OUT std_logic_vector(7  DOWNTO 0);
 		cache_address_read : IN std_logic_vector(15 DOWNTO 0)
 	);
 	END COMPONENT;
@@ -31,7 +31,7 @@ ARCHITECTURE a_system OF system IS
 	PORT (
 		start, clk, rst: in std_logic;
 		compute_done : out std_logic;
-		cache_data : in std_logic_vector (15 downto 0);
+		cache_data : in std_logic_vector (7 downto 0);
 		cache_address : out std_logic_vector (15 downto 0);
 		total_sum : out std_logic_vector(31 downto 0);
 		state_no : out std_logic_vector(3 downto 0);
@@ -74,7 +74,8 @@ ARCHITECTURE a_system OF system IS
 	END COMPONENT;
 
 	-- SIGNALS
-	signal fsm_address_out, cache_data, cache_address : std_logic_vector (15 downto 0);
+	signal fsm_address_out, cache_address : std_logic_vector (15 downto 0);
+	signal cache_data : std_logic_vector(7 downto 0);
 	signal total_sum_bak_in, total_sum_bak_out, total_sum_new : std_logic_vector (31 downto 0);	
 	SIGNAL state_no : std_logic_vector(3 downto 0);
 	SIGNAL index_reg_out : std_logic_vector(15 downto 0);
