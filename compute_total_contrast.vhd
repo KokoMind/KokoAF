@@ -17,14 +17,10 @@ END contrast_computer;
 
 ARCHITECTURE a_contrast_computer OF contrast_computer IS
 	COMPONENT reg IS
+	GENERIC (n : integer := 16);
 	PORT( clk,rst,en : IN std_logic;
-		  d : IN  std_logic_vector(15 DOWNTO 0);
-		  q : OUT std_logic_vector(15 DOWNTO 0));
-	END COMPONENT;
-	COMPONENT reg_32 IS
-	PORT( clk,rst,en : IN std_logic;
-		  d : IN  std_logic_vector(31 DOWNTO 0);
-		  q : OUT std_logic_vector(31 DOWNTO 0));
+		  d : IN  std_logic_vector(n-1 DOWNTO 0);
+		  q : OUT std_logic_vector(n-1 DOWNTO 0));
 	END COMPONENT;
 	COMPONENT accumulator IS
 	PORT (
@@ -57,10 +53,11 @@ ARCHITECTURE a_contrast_computer OF contrast_computer IS
              cout : OUT std_logic);
 	END COMPONENT;
 	
-	COMPONENT mux_8x1_9 IS
+	COMPONENT mux_8x1 IS
+	GENERIC (n : integer := 16);
 	PORT(	sel : IN std_logic_vector(2 downto 0);
-            x0,x1,x2,x3,x4,x5,x6,x7  : IN std_logic_vector(8 downto 0);
-		    q : OUT std_logic_vector(8 downto 0));
+            x0,x1,x2,x3,x4,x5,x6,x7  : IN std_logic_vector(n-1 downto 0);
+		    q : OUT std_logic_vector(n-1 downto 0));
 	END COMPONENT;
 
 	SIGNAL total_sum_out : std_logic_vector(31 downto 0);
@@ -88,12 +85,12 @@ ARCHITECTURE a_contrast_computer OF contrast_computer IS
 	pos_18 <= "000010010";
 	zerovec <= "000000000";
 	cache_data <= "00000000" & cache_data_in;
-        src: reg port map(clk,rst,wr_enable_src, cache_data, src_out);
-	r: reg port map(clk, rst, wr_enable_r, cache_data, r_out);
-	total_sum_reg: reg_32 port map(clk, total_sum_rst, totalsum_enable_r, acc_out, total_sum_out);
+        src: reg generic map (16) port map(clk,rst,wr_enable_src, cache_data, src_out);
+	r: reg generic map (16) port map(clk, rst, wr_enable_r, cache_data, r_out);
+	total_sum_reg: reg generic map (32) port map(clk, total_sum_rst, totalsum_enable_r, acc_out, total_sum_out);
 	acc: accumulator port map(src_out, r_out, total_sum_out, acc_out);
 	indx : index_component port map(clk, rst, index_rst, index_wr_en, finish_indexing, index_reg_out);
-	shift_chooser : mux_8x1_9 port map(mux_adder,zerovec, neg_1, neg_18, pos_1, pos_18,zerovec,zerovec,zerovec, shift_amt);
+	shift_chooser : mux_8x1 generic map(9) port map(mux_adder,zerovec, neg_1, neg_18, pos_1, pos_18,zerovec,zerovec,zerovec, shift_amt);
 	location_adder: generic_nadder generic map (9) port map (index_reg_out, shift_amt, '0', cache_address, dummy_cout);
 	fsm_computer : fsm_compute port map(clk, rst, start, finish_indexing, wr_enable_src, wr_enable_r, totalsum_enable_r, index_rst, index_wr_en, total_sum_rst, compute_done, mux_adder, state_no);
 END a_contrast_computer;

@@ -2,9 +2,10 @@ LIBRARY IEEE;
 USE IEEE.std_logic_1164.all;
 
 ENTITY preset_reg IS
+	GENERIC (n : integer := 16);
 	PORT( clk,rst,en : IN std_logic;
-		  preset, d : IN  std_logic_vector(15 DOWNTO 0);
-		  q : OUT std_logic_vector(15 DOWNTO 0));
+		  preset, d : IN  std_logic_vector(n-1 DOWNTO 0);
+		  q : OUT std_logic_vector(n-1 DOWNTO 0));
 END preset_reg;
 
 ARCHITECTURE a_reg OF preset_reg IS

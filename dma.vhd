@@ -35,21 +35,17 @@ ARCHITECTURE a_dma OF dma IS
     	END COMPONENT;
 
 	COMPONENT preset_reg IS
+	GENERIC (n : integer := 16);
 	PORT(clk,rst,en : IN std_logic;
-		  preset, d : IN  std_logic_vector(15 DOWNTO 0);
-		  q : OUT std_logic_vector(15 DOWNTO 0));
-	END COMPONENT;
-
-	COMPONENT preset_reg_9 IS
-	PORT( clk,rst,en : IN std_logic;
-		  preset, d : IN  std_logic_vector(8 DOWNTO 0);
-		  q : OUT std_logic_vector(8 DOWNTO 0));
+		  preset, d : IN  std_logic_vector(n-1 DOWNTO 0);
+		  q : OUT std_logic_vector(n-1 DOWNTO 0));
 	END COMPONENT;
 
 	COMPONENT reg IS
+	GENERIC (n : integer := 16);
 	PORT( clk,rst,en : IN std_logic;
-		  d : IN  std_logic_vector(15 DOWNTO 0);
-		  q : OUT std_logic_vector(15 DOWNTO 0));
+		  d : IN  std_logic_vector(n-1 DOWNTO 0);
+		  q : OUT std_logic_vector(n-1 DOWNTO 0));
 	END COMPONENT;
 BEGIN
 	zerovec <= "0000000000000000";
@@ -63,12 +59,12 @@ BEGIN
 
 	fdma: FSM_dma port map(load_en, clk, rst, ack, reset, counter_out);
 
-	reg_nvm: preset_reg port map(clk, reset, '1', nvm_start_address, nvm_address_in, nvm_address_out_rd);
+	reg_nvm: preset_reg generic map (16) port map(clk, reset, '1', nvm_start_address, nvm_address_in, nvm_address_out_rd);
 	adder1: generic_nadder generic map (16) port map (nvm_address_out_rd, vec256, '0', nvm_address_in, dummy_cout1);
 	
-	reg_cache: preset_reg_9 port map(clk, reset, '1', vec19, cache_address_in, cache_address_out_rd);
+	reg_cache: preset_reg generic map (9) port map(clk, reset, '1', vec19, cache_address_in, cache_address_out_rd);
 	adder2: generic_nadder generic map (9) port map (cache_address_out_rd, vec18, '0', cache_address_in, dummy_cout2);
 
-	counter1: reg port map(clk,reset, '1', counter_in, counter_out);
+	counter1: reg generic map (16) port map(clk,reset, '1', counter_in, counter_out);
 	adder3: generic_nadder generic map (16) port map (counter_out, zerovec, '1', counter_in, dummy_cout3);
 end a_dma;
