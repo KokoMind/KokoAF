@@ -12,6 +12,7 @@ file_num = open("../mems/numbers.txt", 'w')
 
 for cnt in range(1, 12):
     image = misc.imread(str(cnt) + ".png", flatten=True)
+    image = image.astype('uint8')
 
     #### NVM mem FILE
     with open("../mems/test_nvm_" + str(cnt) + ".mem", 'w') as f:
