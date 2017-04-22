@@ -20,7 +20,7 @@ type state_type  is (do_nothing, load_focus_matrix, set_direction, move_lens, co
 signal state : state_type;
 signal next_state : state_type;
 BEGIN
-	PROCESS (state, start, load_ack, move_done, compute_done, worse, flag_in)
+	PROCESS (state, start, load_ack, move_done, compute_done, worse, flag_in, total_sum_bak_in, in_direction, total_sum_new)
 	BEGIN
 			CASE state is 
 				when do_nothing =>
