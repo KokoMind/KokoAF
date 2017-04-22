@@ -1,7 +1,7 @@
 vsim work.system
 add wave sim:/system/*
-mem load -i /home/mg/Desktop/vlsi_project/KokoAF/test_nvm.mem system/dma1/ram/ram
-mem load -i /home/mg/Desktop/vlsi_project/KokoAF/test_cache.mem system/dma1/cache/ram
+mem load -i /home/mg/Desktop/vlsi_project/KokoAF/test_nvm.mem system/nvm1/ram
+mem load -i /home/mg/Desktop/vlsi_project/KokoAF/test_cache.mem system/cache1/ram
 force -freeze sim:/system/clk 1 0, 0 {50 ps} -r 100
 force -freeze sim:/system/rst 1 0
 force -freeze sim:/system/start 0 0
