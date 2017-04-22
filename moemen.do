@@ -14,3 +14,11 @@ force -freeze sim:/system/start 1 0
 run
 run 25600ps
 run 281400ps
+force -freeze sim:/system/move_done 1 0
+run
+run
+force -freeze sim:/system/move_done 0 0
+run
+run 25600ps
+run 281400ps
+
