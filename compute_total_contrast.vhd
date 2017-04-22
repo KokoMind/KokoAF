@@ -75,8 +75,10 @@ ARCHITECTURE a_contrast_computer OF contrast_computer IS
 	SIGNAL index_reg_out : std_logic_vector(8 downto 0);
 	SIGNAL src_out, r_out : std_logic_vector (15 DOWNTO 0);
 	SIGNAL acc_out : std_logic_vector(31 downto 0);
+	SIGNAL cache_data : std_logic_vector(15 downto 0);
 	
         BEGIN
+	cache_data <= "00000000" & cache_data_8;
 	index_reg_out_out <= index_reg_out;
 	src_out_out <= src_out;
 	r_out_out <= r_out;

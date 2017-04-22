@@ -1,0 +1,11 @@
+../mems/total1= 7827
+../mems/total2= 7953
+../mems/total3= 8105
+../mems/total4= 8195
+../mems/total5= 8382
+../mems/total6= 7817
+../mems/total7= 7335
+../mems/total8= 7009
+../mems/total9= 6680
+../mems/total10= 6423
+../mems/total11= 6126

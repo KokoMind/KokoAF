@@ -7,7 +7,7 @@ PORT(
 	enable,clk,clk_mem : IN std_logic; 
 	in_addr : IN std_logic_vector(15  DOWNTO 0); 
 	ack : OUT std_logic;
-	cache_out : OUT std_logic_vector(15  DOWNTO 0);
+	cache_out : OUT std_logic_vector(7  DOWNTO 0);
 	cache_address_read : IN std_logic_vector(15 DOWNTO 0)
 );
 END dma;
