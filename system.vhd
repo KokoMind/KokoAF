@@ -11,16 +11,18 @@ END system;
 
 ARCHITECTURE a_system OF system IS
 
-	COMPONENT mux_2x1_9 IS
+	COMPONENT mux_2x1 IS
+	GENERIC (n : integer := 16);
 	PORT(	sel : IN std_logic;
-            x1,x2  : IN std_logic_vector(8 downto 0);
-			q : OUT std_logic_vector(8 DOWNTO 0));
+            x1,x2  : IN std_logic_vector(n-1 downto 0);
+			q : OUT std_logic_vector(n-1 DOWNTO 0));
 	END COMPONENT;
 
 	COMPONENT reg IS
+	GENERIC (n : integer := 16);
 	PORT( clk,rst,en : IN std_logic;
-		  d : IN  std_logic_vector(15 DOWNTO 0);
-		  q : OUT std_logic_vector(15 DOWNTO 0));
+		  d : IN  std_logic_vector(n-1 DOWNTO 0);
+		  q : OUT std_logic_vector(n-1 DOWNTO 0));
 	END COMPONENT;
 
 	COMPONENT nvm IS
@@ -74,12 +76,6 @@ ARCHITECTURE a_system OF system IS
 	);
 	END COMPONENT;
 
-	COMPONENT reg_32 IS
-	PORT( clk,rst,en : IN std_logic;
-		  d : IN  std_logic_vector(31 DOWNTO 0);
-		  q : OUT std_logic_vector(31 DOWNTO 0));
-	END COMPONENT;
-
 	COMPONENT FSM IS
 	PORT (  
 		clk, start, rst, load_ack, compute_done, move_done, flag_in, worse : in std_logic;
@@ -93,12 +89,6 @@ ARCHITECTURE a_system OF system IS
 	     );
 	END COMPONENT;
 
-	COMPONENT reg_1bit IS
-	PORT( clk,rst,en : IN std_logic;
-		  d : IN  std_logic;
-		  q : OUT std_logic);
-	END COMPONENT;
-
 	-- SIGNALS
 	signal nvm_start_address, nvm_address_out : std_logic_vector (15 downto 0);
 	signal total_sum_bak_in, total_sum_bak_out, total_sum_new : std_logic_vector (31 downto 0);	
@@ -110,16 +100,20 @@ ARCHITECTURE a_system OF system IS
 	SIGNAL src_out, r_out : std_logic_vector (15 DOWNTO 0);
 	SIGNAL acc_out : std_logic_vector(31 downto 0);
 	signal out_direction, in_direction, worse, load_en, load_ack, compute_en, compute_done, flag_out, flag_in : std_logic;
-        BEGIN
-	
-	direction1 : reg_1bit port map(clk, rst, '1', out_direction, in_direction);
-	flag1 : reg_1bit port map(clk, rst, '1', flag_out, flag_in);
-	total_sum_bak1 : reg_32 port map(clk, rst, '1', total_sum_bak_out, total_sum_bak_in);
+        signal out_direction_vec, in_direction_vec, flag_out_vec, flag_in_vec : std_logic_vector (0 downto 0);
+	BEGIN
+	out_direction_vec(0) <= out_direction;
+	in_direction <= in_direction_vec(0);
+	flag_out_vec(0) <= flag_out;
+	flag_in <= flag_in_vec(0);
+	direction1 : reg generic map(1) port map(clk, rst, '1', out_direction_vec, in_direction_vec);
+	flag1 : reg generic map (1) port map(clk, rst, '1', flag_out_vec, flag_in_vec);
+	total_sum_bak1 : reg generic map (32) port map(clk, rst, '1', total_sum_bak_out, total_sum_bak_in);
 	comparator1 : comparator port map(total_sum_bak_in, total_sum_new, worse);
 	
 	nvm_data_in <= "00000000";
 	nvm1 : nvm port map(clk, load_en, '0', nvm_address_out, nvm_data_in, nvm_data_out);
-	mux_cache : mux_2x1_9 port map (load_en, cache_address_read, cache_address_write, cache_address);
+	mux_cache : mux_2x1 generic map (9) port map (load_en, cache_address_read, cache_address_write, cache_address);
 	cache1 : cache port map(clk, '1', load_en, cache_address, nvm_data_out, cache_data_out);
 	dma1 : dma port map(load_en, clk, rst, nvm_start_address, nvm_address_out, load_ack, cache_address_write);
 	

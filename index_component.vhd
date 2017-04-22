@@ -9,11 +9,12 @@ END index_component;
 
 ARCHITECTURE a_index_component OF index_component IS
 	
-Component preset_reg_9 IS
+Component preset_reg IS
+	GENERIC (n : integer := 16);
 	PORT( clk,rst,en : IN std_logic;
-		preset: IN std_logic_vector(8 DOWNTO 0);
-		  d : IN  std_logic_vector(8 DOWNTO 0);
-		  q : OUT std_logic_vector(8 DOWNTO 0));
+		preset: IN std_logic_vector(n-1 DOWNTO 0);
+		  d : IN  std_logic_vector(n-1 DOWNTO 0);
+		  q : OUT std_logic_vector(n-1 DOWNTO 0));
 END Component;
 
 Component generic_nadder IS 
@@ -24,17 +25,11 @@ Component generic_nadder IS
              cout : OUT std_logic);
 END Component;
 
-Component mux_4x1_9 IS
-	PORT(	
-		sel : IN std_logic_vector(1 downto 0);
-            	x0,x1,x2,x3  : IN std_logic_vector(8 downto 0);
-		q : OUT std_logic_vector(8 downto 0));
-END Component;
-
-Component mux_2x1_9 IS
-	PORT(	sel : IN std_logic;
-            x1,x2  : IN std_logic_vector(8 downto 0);
-			q : OUT std_logic_vector(8 DOWNTO 0));
+Component mux_4x1 IS
+	GENERIC (n : integer := 16);
+	PORT(	sel : IN std_logic_vector(1 downto 0);
+            x0,x1,x2,x3  : IN std_logic_vector(n-1 downto 0);
+		    q : OUT std_logic_vector(n-1 downto 0));
 END Component;
 
 SIGNAL index_reg_in : std_logic_vector(8 DOWNTO 0);
@@ -79,8 +74,8 @@ finish_indexing <= finish_indexing_out;
 
 index_reg_en <= wr_en; -- enable the register when rst of the system or wr_en
 		
-index_reg : preset_reg_9 port map (clk, index_reg_rst, index_reg_en, Eighteenvec, index_reg_in, index_reg_out);
+index_reg : preset_reg generic map (9) port map (clk, index_reg_rst, index_reg_en, Eighteenvec, index_reg_in, index_reg_out);
 index_add : generic_nadder generic map (9) port map (adder_a, adder_b, adder_cin, adder_out, adder_cout);
-index_mux_add : mux_4x1_9 port map (adder_mux_sel, Zerovec, Onevec, Threevec, Zerovec, adder_b);
+index_mux_add : mux_4x1 generic map(9) port map (adder_mux_sel, Zerovec, Onevec, Threevec, Zerovec, adder_b);
 
 END a_index_component;

@@ -1,13 +1,14 @@
 LIBRARY IEEE;
 USE IEEE.std_logic_1164.all;
 
-ENTITY mux_8x1_9 IS
+ENTITY mux_8x1 IS
+	GENERIC (n : integer := 16);
 	PORT(	sel : IN std_logic_vector(2 downto 0);
-            x0,x1,x2,x3,x4,x5,x6,x7  : IN std_logic_vector(8 downto 0);
-		    q : OUT std_logic_vector(8 downto 0));
-END mux_8x1_9;
+            x0,x1,x2,x3,x4,x5,x6,x7  : IN std_logic_vector(n-1 downto 0);
+		    q : OUT std_logic_vector(n-1 downto 0));
+END mux_8x1;
 
-ARCHITECTURE a_mux_8x1_9 OF mux_8x1_9 IS
+ARCHITECTURE a_mux_8x1 OF mux_8x1 IS
 	BEGIN
 		PROCESS(x0,x1,x2,x3,x4,x5,x6,x7,sel)
 			BEGIN
@@ -29,5 +30,5 @@ ARCHITECTURE a_mux_8x1_9 OF mux_8x1_9 IS
 				        q <= x7;
 			END IF;
 		END PROCESS;
-END a_mux_8x1_9;
+END a_mux_8x1;
 
