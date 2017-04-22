@@ -14,7 +14,7 @@ END dma;
 
 ARCHITECTURE a_dma OF dma IS
 
-	signal zerovec, vec1, vec16, nvm_address_in, counter_in, counter_out, nvm_address_out_rd : std_logic_vector (15 downto 0);
+	signal zerovec, vec1, vec256, vec16, nvm_address_in, counter_in, counter_out, nvm_address_out_rd : std_logic_vector (15 downto 0);
 	signal cache_address_in, vec18, vec19, cache_address_out_rd : std_logic_vector (8 downto 0);
 	signal dummy_cout1, dummy_cout2, dummy_cout3, reset : std_logic;
 
@@ -55,6 +55,7 @@ BEGIN
 	zerovec <= "0000000000000000";
 	vec1 <= "0000000000000001";
 	vec16 <= "0000000000010000";
+	vec256 <= "0000000100000000";
 	vec19 <= "000010011";
 	vec18 <= "000010010";
 	cache_address_out <= cache_address_out_rd;
@@ -63,7 +64,7 @@ BEGIN
 	fdma: FSM_dma port map(load_en, clk, rst, ack, reset, counter_out);
 
 	reg_nvm: preset_reg port map(clk, reset, '1', nvm_start_address, nvm_address_in, nvm_address_out_rd);
-	adder1: generic_nadder generic map (16) port map (nvm_address_out_rd, vec16, '0', nvm_address_in, dummy_cout1);
+	adder1: generic_nadder generic map (16) port map (nvm_address_out_rd, vec256, '0', nvm_address_in, dummy_cout1);
 	
 	reg_cache: preset_reg_9 port map(clk, reset, '1', vec19, cache_address_in, cache_address_out_rd);
 	adder2: generic_nadder generic map (9) port map (cache_address_out_rd, vec18, '0', cache_address_in, dummy_cout2);
