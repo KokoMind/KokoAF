@@ -29,7 +29,7 @@ BEGIN
 						r_wr_en <= '0';
 						totalsum_wr_en <= '0';
 						index_wr_en <= '0';
-						index_rst <= '0';
+						index_rst <= '1';
 						totalsum_rst <= '1';
 						compute_done <= '0';
 						mux_adder <= "000";
@@ -40,7 +40,7 @@ BEGIN
 						r_wr_en <= '0';
 						totalsum_wr_en <= '0';
 						index_wr_en <= '0';
-						index_rst <= '0';
+						index_rst <= '1';
 						totalsum_rst <= '1';
 						compute_done <= '0';
 						mux_adder <= "000";
@@ -197,7 +197,7 @@ BEGIN
 					r_wr_en <= '0';
 					totalsum_wr_en <= '0';
 					index_wr_en <= '0';
-					index_rst <= '0';
+					index_rst <= '1';
 					totalsum_rst <= '1';
 					compute_done <= '0';
 					mux_adder <= "000";
