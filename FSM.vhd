@@ -95,6 +95,9 @@ BEGIN
 						elsif flag_in = '0' and worse = '1' then
 							flag_out <= '1';
 							next_state <= set_direction;
+						elsif flag_in = '0' and worse = '0' then
+							flag_out <= '1';
+							next_state <= move_lens;
 						elsif flag_in = '1' and worse = '1' then 
 							flag_out <= flag_in;
 							next_state <= finish;

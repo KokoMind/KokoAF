@@ -15,7 +15,7 @@ END FSM_compute;
 
 ARCHITECTURE FSM_compute_A OF FSM_compute IS
 
-type state_type  is (do_nothing, init, inc, load_src, load_r1, compute1, load_r2, compute2, load_r3, compute3, load_r4, compute4, compute_finish); 
+type state_type  is (do_nothing, init, inc, load_src, load_r1, compute1, load_r2, compute2, load_r3, compute3, load_r4, compute4, compute_finish, compute_finish_2); 
 signal state : state_type;
 signal next_state : state_type;
 BEGIN
@@ -181,6 +181,17 @@ BEGIN
 					mux_adder <= "000";
 					state_no <= "1011";
 				when compute_finish => 
+					next_state <= compute_finish_2;
+					src_wr_en <= '0';
+					r_wr_en <= '0';
+					totalsum_wr_en <= '0';
+					index_wr_en <= '0';
+					index_rst <= '0';
+					totalsum_rst <= '0';
+					compute_done <= '1';
+					mux_adder <= "000";
+					state_no <= "1100";
+				when compute_finish_2 => 
 					next_state <= do_nothing;
 					src_wr_en <= '0';
 					r_wr_en <= '0';
