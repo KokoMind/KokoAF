@@ -16,7 +16,7 @@ for cnt in range(1, 12):
     #### NVM mem FILE
     with open("../mems/test_nvm_" + str(cnt) + ".mem", 'w') as f:
         f.write("""// memory data file (do not edit the following line - required for mem load use)
-    // instance=/dma/ram/ram
+    // instance=/nvm1/ram
     // format=mti addressradix=d dataradix=d version=1.0 wordsperline=1\n""")
         for i in range(256):
             for j in range(256):
