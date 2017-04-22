@@ -8,14 +8,16 @@ ENTITY preset_reg IS
 		  q : OUT std_logic_vector(n-1 DOWNTO 0));
 END preset_reg;
 
-ARCHITECTURE a_reg OF preset_reg IS
+ARCHITECTURE a_preset_reg OF preset_reg IS
 	BEGIN
 		PROCESS(clk,rst)
 			BEGIN
 				IF rst = '1' THEN
 					q <= preset;
-				ELSIF en = '1' AND rising_edge(Clk) THEN
-					q <= d;
+				ELSIF rising_edge(Clk) THEN
+					if en = '1' then
+						q <= d;
+					end if;
 				END IF;
 		END PROCESS;
-END a_reg;
+END a_preset_reg;

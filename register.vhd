@@ -10,12 +10,14 @@ END reg;
 
 ARCHITECTURE a_reg OF reg IS
 	BEGIN
-		PROCESS(clk,rst)
+		PROCESS(clk,rst,en)
 			BEGIN
 				IF rst = '1' THEN
 					q <= (OTHERS=>'0');
-				ELSIF en = '1' AND rising_edge(Clk) THEN
-					q <= d;
+				ELSIF rising_edge(Clk) THEN
+					if en = '1' then
+						q <= d;
+					end if;
 				END IF;
 		END PROCESS;
 END a_reg;
