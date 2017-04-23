@@ -17,7 +17,7 @@ END dma;
 ARCHITECTURE a_dma OF dma IS
 
 	signal zerovec, vec1, vec256, vec16, nvm_address_in, counter_outer_in, counter_outer_out, nvm_address_out_rd : std_logic_vector (15 downto 0);
-	signal cache_address_in, vec18, vec19, cache_address_out_rd, zerovec_9 : std_logic_vector (8 downto 0);
+	signal cache_address_in, vec18, vec19, cache_address_out_rd, zerovec_9, inc_pix, vec1_9, vec3 : std_logic_vector (8 downto 0);
 	signal counter_inner_out, nvm_data_selector, counter_inner_in, zerovec_4 : std_logic_vector (3 downto 0);
 	signal dummy_cout1, dummy_cout2, dummy_cout3, dummy_cout4, reset, inc_counter_outer : std_logic;
 
@@ -67,6 +67,8 @@ BEGIN
 	vec256 <= "0000000100000000";
 	vec19 <= "000010011";
 	vec18 <= "000010010";
+	vec3 <= "000000011";
+	vec1_9 <= "000000001";
 	cache_address_out <= cache_address_out_rd;
 	nvm_address_out <= nvm_address_out_rd;
 
@@ -75,7 +77,7 @@ BEGIN
 	--nvm control
 
 	reg_nvm: preset_reg generic map (16) port map(clk, reset, inc_counter_outer, nvm_start_address, nvm_address_in, nvm_address_out_rd);
-	adder1: generic_nadder generic map (16) port map (nvm_address_out_rd, zerovec, '1', nvm_address_in, dummy_cout1);
+	adder1: generic_nadder generic map (16) port map (nvm_address_out_rd, vec256, '0', nvm_address_in, dummy_cout1);
 	
 	counter_outer: reg generic map (16) port map(clk,reset, inc_counter_outer, counter_outer_in, counter_outer_out);
 	adder3: generic_nadder generic map (16) port map (counter_outer_out, zerovec, '1', counter_outer_in, dummy_cout3);
@@ -83,13 +85,14 @@ BEGIN
 	--cache control
 
 	reg_cache: preset_reg generic map (9) port map(clk, reset, '1', vec19, cache_address_in, cache_address_out_rd);
-	adder2: generic_nadder generic map (9) port map (cache_address_out_rd, zerovec_9, '1', cache_address_in, dummy_cout2);
+	adder2: generic_nadder generic map (9) port map (cache_address_out_rd, inc_pix, '0', cache_address_in, dummy_cout2);
 
 	counter_inner: reg generic map (4) port map(clk,reset, '1', counter_inner_in, counter_inner_out);
 	adder4: generic_nadder generic map (4) port map (counter_inner_out, zerovec_4, '1', counter_inner_in, dummy_cout4);
 
 	inc_counter_outer <= '1' when counter_inner_out = "1111" else '0';
 	nvm_data_selector <= counter_inner_out;
+	inc_pix <= vec3 when counter_inner_out = "1111" else vec1_9; 
 
 	mux_nvm_data : mux_16x1 generic map (8) port map (nvm_data_selector, nvm_data_out (7 downto 0), nvm_data_out (15 downto 8), nvm_data_out (23 downto 16), nvm_data_out (31 downto 24), nvm_data_out (39 downto 32), nvm_data_out (47 downto 40), 
 				nvm_data_out (55 downto 48), nvm_data_out (63 downto 56), nvm_data_out (71 downto 64), nvm_data_out (79 downto 72), nvm_data_out (87 downto 80), nvm_data_out (95 downto 88), nvm_data_out (103 downto 96), nvm_data_out (111 downto 104), 

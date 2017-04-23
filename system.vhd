@@ -97,7 +97,7 @@ ARCHITECTURE a_system OF system IS
 	signal cache_address_read, cache_address_write, cache_address : std_logic_vector (8 downto 0);
 	signal nvm_data_in, nvm_data_out : std_logic_vector (127 downto 0);
 	signal cache_data_out, nvm_data_out_selected : std_logic_vector (7 downto 0);
-	SIGNAL state_no, nvm_data_selector : std_logic_vector(3 downto 0);
+	SIGNAL state_no : std_logic_vector(3 downto 0);
 	SIGNAL index_reg_out : std_logic_vector(8 downto 0);
 	SIGNAL src_out, r_out : std_logic_vector (15 DOWNTO 0);
 	SIGNAL acc_out : std_logic_vector(31 downto 0);
