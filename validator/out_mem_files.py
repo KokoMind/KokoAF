@@ -13,17 +13,19 @@ file_num = open("../mems/numbers.txt", 'w')
 for cnt in range(1, 12):
     image = misc.imread(str(cnt) + ".png", flatten=True)
     image = image.astype('uint8')
-
+    image_flattened = image.ravel()
     #### NVM mem FILE
     with open("../mems/test_nvm_" + str(cnt) + ".mem", 'w') as f:
         f.write("""// memory data file (do not edit the following line - required for mem load use)
     // instance=/nvm1/ram
     // format=mti addressradix=d dataradix=d version=1.0 wordsperline=1\n""")
-        for i in range(256):
-            for j in range(256):
-                f.write(str(i * 256 + j) + ": ")
-                f.write(str(image[i, j]))
-                f.write('\n')
+        for i in range(65536):
+            ss = ""
+            for k in range(16):
+                ss = bin(image[i+k])[2:].zfill(8) + ss 
+            f.write(str(i) + ": ")
+            f.write(ss)
+            f.write('\n')
 
     block = image[row:row + 16, column:column + 16]
 
