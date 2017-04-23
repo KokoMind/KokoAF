@@ -31,7 +31,7 @@ ARCHITECTURE a_system OF system IS
 		en  : IN std_logic;
 		wr  : IN std_logic;
 		address : IN  std_logic_vector(15 DOWNTO 0);
-		datain  : IN  std_logic_vector(7 DOWNTO 0);
+		datain  : IN  std_logic_vector(127 DOWNTO 0);
 		dataout : OUT std_logic_vector(127 DOWNTO 0));
 	END COMPONENT;
 
@@ -41,7 +41,7 @@ ARCHITECTURE a_system OF system IS
 		en  : IN std_logic;
 		wr  : IN std_logic;
 		address : IN  std_logic_vector(8 DOWNTO 0);
-		datain  : IN  std_logic_vector(127 DOWNTO 0);
+		datain  : IN  std_logic_vector(7 DOWNTO 0);
 		dataout : OUT std_logic_vector(7 DOWNTO 0));
 	END COMPONENT;
 
@@ -51,7 +51,9 @@ ARCHITECTURE a_system OF system IS
 		nvm_start_address : IN std_logic_vector(15 DOWNTO 0);
 		nvm_address_out : OUT std_logic_vector(15 DOWNTO 0); 
 		ack : OUT std_logic;
-		cache_address_out : OUT std_logic_vector(8 DOWNTO 0)
+		cache_address_out : OUT std_logic_vector(8 DOWNTO 0);
+		nvm_data_out : IN std_logic_vector(127 downto 0);
+		nvm_data_out_selected : OUT std_logic_vector(7 DOWNTO 0)
 	);
 	END COMPONENT;
 
@@ -93,9 +95,9 @@ ARCHITECTURE a_system OF system IS
 	signal nvm_start_address, nvm_address_out : std_logic_vector (15 downto 0);
 	signal total_sum_bak_in, total_sum_bak_out, total_sum_new : std_logic_vector (31 downto 0);	
 	signal cache_address_read, cache_address_write, cache_address : std_logic_vector (8 downto 0);
-	signal nvm_data_in, cache_data_out : std_logic_vector (7 downto 0);
-	signal nvm_data_out : std_logic_vector (127 downto 0);
-	SIGNAL state_no : std_logic_vector(3 downto 0);
+	signal nvm_data_in, nvm_data_out : std_logic_vector (127 downto 0);
+	signal cache_data_out, nvm_data_out_selected : std_logic_vector (7 downto 0);
+	SIGNAL state_no, nvm_data_selector : std_logic_vector(3 downto 0);
 	SIGNAL index_reg_out : std_logic_vector(8 downto 0);
 	SIGNAL src_out, r_out : std_logic_vector (15 DOWNTO 0);
 	SIGNAL acc_out : std_logic_vector(31 downto 0);
@@ -111,11 +113,11 @@ ARCHITECTURE a_system OF system IS
 	total_sum_bak1 : reg generic map (32) port map(clk, rst, '1', total_sum_bak_out, total_sum_bak_in);
 	comparator1 : comparator port map(total_sum_bak_in, total_sum_new, worse);
 	
-	nvm_data_in <= "00000000";
+	nvm_data_in <= (OTHERS => '0');
 	nvm1 : nvm port map(clk, load_en, '0', nvm_address_out, nvm_data_in, nvm_data_out);
 	mux_cache : mux_2x1 generic map (9) port map (load_en, cache_address_read, cache_address_write, cache_address);
-	cache1 : cache port map(clk, '1', load_en, cache_address, nvm_data_out, cache_data_out);
-	dma1 : dma port map(load_en, clk, rst, nvm_start_address, nvm_address_out, load_ack, cache_address_write);
+	cache1 : cache port map(clk, '1', load_en, cache_address, nvm_data_out_selected, cache_data_out);
+	dma1 : dma port map(load_en, clk, rst, nvm_start_address, nvm_address_out, load_ack, cache_address_write, nvm_data_out, nvm_data_out_selected);
 	
 	contraster1 : contrast_computer port map(compute_en, clk, rst, compute_done, cache_data_out, cache_address_read, total_sum_new, state_no, index_reg_out, src_out, r_out, acc_out);
 	

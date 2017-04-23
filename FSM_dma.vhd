@@ -5,7 +5,8 @@ ENTITY FSM_dma IS
 PORT(
 	load_en,clk,rst : IN std_logic; 
 	ack, reset : OUT std_logic;
-	counter : IN std_logic_vector (15 DOWNTO 0)
+	counter_outer : IN std_logic_vector (15 DOWNTO 0);
+	counter_inner : IN std_logic_vector (3 DOWNTO 0)
 );
 END FSM_dma;
 
@@ -14,9 +15,11 @@ ARCHITECTURE a_FSM_dma OF FSM_dma IS
 	signal state : state_type;
 	signal next_state : state_type;
 	signal vec15 : std_logic_vector (15 downto 0);
+	signal vec15_4 : std_logic_vector (3 downto 0);
 BEGIN
 	vec15 <= "0000000000001111";
-	PROCESS (state, load_en, counter)
+	vec15_4 <= "1111";
+	PROCESS (state, load_en, counter_outer, counter_inner)
 	BEGIN
 		CASE state is 
 			when do_nothing =>
@@ -30,7 +33,7 @@ BEGIN
 			when load =>
 					ack <= '0';
 					reset <= '0';
-					if counter = vec15 then
+					if counter_outer = vec15 and counter_inner = vec15_4 then
 						next_state <= finish;
 					else
 						next_state <= load;
